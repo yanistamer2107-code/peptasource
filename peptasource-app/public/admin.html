@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — PeptaSource Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+<style>
+  .layout{display:flex;min-height:100vh}
+  .side{width:240px;flex:none;background:var(--bg-soft);border-right:1px solid var(--panel-brd);padding:1.4rem 1rem;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+  .side .brand{margin-bottom:2rem;padding:0 .4rem}
+  .navitem{display:flex;align-items:center;gap:.7rem;padding:.7rem .9rem;border-radius:11px;color:var(--muted);font-weight:600;font-size:.92rem;cursor:pointer;margin-bottom:.2rem;transition:.2s}
+  .navitem:hover{background:rgba(255,255,255,.05);color:#fff}
+  .navitem.active{background:linear-gradient(120deg,rgba(53,224,208,.16),rgba(74,168,255,.12));color:#fff;border:1px solid rgba(53,224,208,.3)}
+  .navitem .n{margin-left:auto;background:var(--danger);color:#fff;font-size:.7rem;font-weight:800;padding:0 .45rem;border-radius:999px;min-width:20px;text-align:center}
+  .main{flex:1;padding:2rem 2.4rem;overflow-x:auto}
+  .page-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.8rem;flex-wrap:wrap;gap:1rem}
+  .page-head h1{font-size:1.7rem}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-bottom:1.8rem}
+  .kpi{padding:1.4rem;border-radius:16px;background:var(--panel);border:1px solid var(--panel-brd)}
+  .kpi .lbl{font-size:.8rem;color:var(--muted)}
+  .kpi .val{font-family:'Sora';font-size:1.9rem;font-weight:700;margin-top:.3rem;background:linear-gradient(120deg,#fff,var(--cyan-soft));-webkit-background-clip:text;background-clip:text;color:transparent}
+  table{width:100%;border-collapse:collapse;font-size:.9rem}
+  th{text-align:left;font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted-dim);padding:.7rem .8rem;border-bottom:1px solid var(--panel-brd);font-weight:700}
+  td{padding:.75rem .8rem;border-bottom:1px solid rgba(120,190,220,.08);vertical-align:middle}
+  tr:hover td{background:rgba(255,255,255,.02)}
+  .tablewrap{background:var(--panel);border:1px solid var(--panel-brd);border-radius:16px;overflow:hidden}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+  @media(max-width:900px){.kpis{grid-template-columns:1fr 1fr}.side{width:66px}.side .lab,.side .brand__name{display:none}.grid2{grid-template-columns:1fr}}
+  input.mini{padding:.4rem .5rem;width:72px;font-size:.86rem}
+  select.mini{padding:.4rem .5rem;font-size:.84rem;width:auto}
+  .hide{display:none}
+</style>
+</head>
+<body>
+  <!-- LOGIN GATE -->
+  <div id="gate" style="display:none;min-height:100vh;display:none;align-items:center;justify-content:center;padding:1rem">
+    <div class="card" style="max-width:400px;width:100%">
+      <div class="brand" style="margin-bottom:1.4rem"><span class="brand__mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 22v-6M4.9 6.5l4.6 2.7M14.5 14.8l4.6 2.7M19.1 6.5l-4.6 2.7M4.9 17.5l4.6-2.7" stroke="#04202a" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="12" r="2.6" fill="#04202a"/></svg></span><span class="brand__name">Pepta<span>Source</span> · Admin</span></div>
+      <label class="field"><span>Email admin</span><input id="a_email" type="email" placeholder="admin@peptasource.example"></label>
+      <label class="field"><span>Mot de passe</span><input id="a_pass" type="password" placeholder="••••••••"></label>
+      <button class="btn btn--primary btn--full" id="gbtn" onclick="adminLogin()">Connexion</button>
+      <p class="muted" style="font-size:.78rem;text-align:center;margin-top:1rem"><a href="/" class="muted">← Retour à la boutique</a></p>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div class="layout" id="app" style="display:none">
+    <aside class="side">
+      <a class="brand" href="/"><span class="brand__mark" style="width:34px;height:34px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 22v-6M4.9 6.5l4.6 2.7M14.5 14.8l4.6 2.7M19.1 6.5l-4.6 2.7M4.9 17.5l4.6-2.7" stroke="#04202a" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="12" r="2.6" fill="#04202a"/></svg></span><span class="brand__name" style="font-size:1rem">Pepta<span>Source</span></span></a>
+      <div class="navitem active" data-tab="dashboard">📊 <span class="lab">Tableau de bord</span></div>
+      <div class="navitem" data-tab="orders">🧾 <span class="lab">Commandes</span><span class="n hide" id="nOrders"></span></div>
+      <div class="navitem" data-tab="products">🧪 <span class="lab">Produits & stock</span></div>
+      <div class="navitem" data-tab="customers">🔬 <span class="lab">Comptes labos</span><span class="n hide" id="nLabs"></span></div>
+      <div class="navitem" data-tab="settings">⚙️ <span class="lab">Paiement</span></div>
+      <div style="margin-top:auto">
+        <div class="navitem" onclick="doLogout()">⎋ <span class="lab">Déconnexion</span></div>
+      </div>
+    </aside>
+    <main class="main">
+      <!-- DASHBOARD -->
+      <section id="tab-dashboard">
+        <div class="page-head"><h1>Tableau de bord</h1><a class="btn btn--glass btn--sm" href="/" target="_blank">Voir la boutique ↗</a></div>
+        <div class="kpis" id="kpis"></div>
+        <div class="grid2">
+          <div><h3 style="font-size:1.05rem;margin-bottom:.9rem">Commandes récentes</h3><div class="tablewrap"><table id="recentT"><tbody></tbody></table></div></div>
+          <div><h3 style="font-size:1.05rem;margin-bottom:.9rem">⚠️ Stock faible</h3><div class="tablewrap"><table id="lowT"><tbody></tbody></table></div></div>
+        </div>
+      </section>
+
+      <!-- ORDERS -->
+      <section id="tab-orders" style="display:none">
+        <div class="page-head"><h1>Commandes</h1></div>
+        <div class="tablewrap"><table id="ordersT"><thead><tr><th>Référence</th><th>Labo</th><th>Articles</th><th>Total</th><th>Paiement</th><th>Statut</th><th>Action</th></tr></thead><tbody></tbody></table></div>
+      </section>
+
+      <!-- PRODUCTS -->
+      <section id="tab-products" style="display:none">
+        <div class="page-head"><h1>Produits & stock</h1><button class="btn btn--primary btn--sm" onclick="openProduct()">+ Nouveau produit</button></div>
+        <div class="tablewrap"><table id="prodT"><thead><tr><th>Réf.</th><th>Nom</th><th>Catégorie</th><th>Prix (€)</th><th>Stock</th><th>Seuil</th><th>Actif</th><th></th></tr></thead><tbody></tbody></table></div>
+      </section>
+
+      <!-- CUSTOMERS -->
+      <section id="tab-customers" style="display:none">
+        <div class="page-head"><h1>Comptes laboratoires</h1></div>
+        <div class="tablewrap"><table id="custT"><thead><tr><th>Labo</th><th>Contact / Email</th><th>Habilitation</th><th>Pays</th><th>Cmd</th><th>Statut</th><th>Action</th></tr></thead><tbody></tbody></table></div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section id="tab-settings" style="display:none">
+        <div class="page-head"><h1>Instructions de paiement</h1><button class="btn btn--primary btn--sm" onclick="saveSettings()">Enregistrer</button></div>
+        <div class="grid2">
+          <div class="card"><h3 style="font-size:1.05rem;margin-bottom:1rem">🏦 Virement bancaire</h3>
+            <label class="field"><span>Bénéficiaire</span><input id="s_bank_holder"></label>
+            <label class="field"><span>IBAN</span><input id="s_bank_iban"></label>
+            <label class="field"><span>BIC</span><input id="s_bank_bic"></label>
+          </div>
+          <div class="card"><h3 style="font-size:1.05rem;margin-bottom:1rem">₿ Cryptomonnaie</h3>
+            <label class="field"><span>Adresse Bitcoin (BTC)</span><input id="s_crypto_btc"></label>
+            <label class="field"><span>Adresse USDT (TRC-20)</span><input id="s_crypto_usdt"></label>
+            <label class="field"><span>Email de contact</span><input id="s_company_email"></label>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Product modal -->
+  <div class="modal-wrap" id="prodModal"><div class="modal" id="prodInner"></div></div>
+  <div id="toast"><div class="t"></div></div>
+
+<script src="/app.js"></script>
+<script>
+  const OS = { awaiting_payment:['En attente','warn'], paid:['Payée','info'], shipped:['Expédiée','ok'], cancelled:['Annulée','danger'] };
+  let ME=null;
+
+  async function init(){
+    ME = await api.me();
+    if(!ME || ME.role!=='admin'){ document.getElementById('gate').style.display='flex'; return; }
+    document.getElementById('app').style.display='flex';
+    document.querySelectorAll('.navitem[data-tab]').forEach(n=>n.onclick=()=>switchTab(n.dataset.tab));
+    await Promise.all([loadDashboard(), loadOrders(), loadProducts(), loadCustomers(), loadSettings()]);
+  }
+  async function adminLogin(){
+    const b=document.getElementById('gbtn'); b.disabled=true; b.innerHTML='<span class="spinner"></span>';
+    const res = await api.post('/api/auth/login',{ email:document.getElementById('a_email').value, password:document.getElementById('a_pass').value });
+    b.disabled=false; b.textContent='Connexion';
+    if(res.error||res.user.role!=='admin'){ toast(res.error||'Accès réservé à l’administration.',true); return; }
+    location.reload();
+  }
+  async function doLogout(){ await api.post('/api/auth/logout'); location.href='/'; }
+  window.adminLogin=adminLogin; window.doLogout=doLogout;
+
+  function switchTab(t){
+    document.querySelectorAll('.navitem[data-tab]').forEach(n=>n.classList.toggle('active',n.dataset.tab===t));
+    ['dashboard','orders','products','customers','settings'].forEach(x=>document.getElementById('tab-'+x).style.display = x===t?'block':'none');
+  }
+  window.switchTab=switchTab;
+
+  // DASHBOARD
+  async function loadDashboard(){
+    const s = await api.get('/api/admin/stats');
+    document.getElementById('kpis').innerHTML = [
+      ['Chiffre d’affaires', s.revenue+' €'],['Commandes', s.orders_total],
+      ['À traiter', s.awaiting],['Labos à valider', s.pending_labs]
+    ].map(k=>`<div class="kpi"><div class="lbl">${k[0]}</div><div class="val">${k[1]}</div></div>`).join('');
+    document.getElementById('recentT').querySelector('tbody').innerHTML = s.recent.length
+      ? s.recent.map(r=>{const[l,c]=OS[r.status]||[r.status,'muted'];return `<tr><td><b>${r.reference}</b></td><td class="muted">${r.lab_name||''}</td><td>${r.total} €</td><td><span class="pill pill--${c}">${l}</span></td></tr>`}).join('')
+      : '<tr><td class="muted" style="padding:1.2rem">Aucune commande.</td></tr>';
+    document.getElementById('lowT').querySelector('tbody').innerHTML = s.low_stock.length
+      ? s.low_stock.map(p=>`<tr><td><b>${p.ref}</b></td><td class="muted">${p.name}</td><td><span class="pill ${p.stock===0?'pill--danger':'pill--warn'}">${p.stock} en stock</span></td></tr>`).join('')
+      : '<tr><td class="muted" style="padding:1.2rem">Tous les stocks sont OK ✓</td></tr>';
+    // badges
+    setBadge('nOrders', s.awaiting); setBadge('nLabs', s.pending_labs);
+  }
+  function setBadge(id,n){ const el=document.getElementById(id); if(n>0){el.textContent=n;el.classList.remove('hide');}else el.classList.add('hide'); }
+
+  // ORDERS
+  async function loadOrders(){
+    const { orders } = await api.get('/api/admin/orders');
+    document.getElementById('ordersT').querySelector('tbody').innerHTML = orders.length ? orders.map(o=>{
+      const items = o.items.map(i=>`${i.qty}× ${i.ref}`).join(', ');
+      const opts = ['awaiting_payment','paid','shipped','cancelled'].map(s=>`<option value="${s}" ${s===o.status?'selected':''}>${OS[s][0]}</option>`).join('');
+      return `<tr><td><b>${o.reference}</b><div class="muted" style="font-size:.75rem">${o.created_at}</div></td>
+        <td>${o.lab_name||''}<div class="muted" style="font-size:.75rem">${o.email}</div></td>
+        <td class="muted" style="max-width:200px">${items}</td><td><b>${o.total} €</b></td><td>${o.payment_method}</td>
+        <td><select class="mini" onchange="setOrder(${o.id},this.value)">${opts}</select></td>
+        <td><span class="pill pill--${OS[o.status][1]}">${OS[o.status][0]}</span></td></tr>`;
+    }).join('') : '<tr><td colspan="7" class="muted" style="padding:1.4rem">Aucune commande.</td></tr>';
+  }
+  window.setOrder = async (id,status)=>{ const r=await api.patch('/api/admin/orders/'+id,{status}); if(r.error){toast(r.error,true);return;} toast('Statut mis à jour ✓'); await Promise.all([loadOrders(),loadDashboard(),loadProducts()]); };
+
+  // PRODUCTS
+  let PRODUCTS=[];
+  async function loadProducts(){
+    const { products } = await api.get('/api/admin/products'); PRODUCTS=products;
+    document.getElementById('prodT').querySelector('tbody').innerHTML = products.map(p=>`<tr>
+      <td><b>${p.ref}</b></td><td>${p.name}</td><td class="muted">${p.category||''}</td>
+      <td>${p.price}</td>
+      <td><span class="pill ${p.stock===0?'pill--danger':p.stock<=p.low_stock?'pill--warn':'pill--ok'}">${p.stock}</span></td>
+      <td class="muted">${p.low_stock}</td>
+      <td>${p.active?'<span class="pill pill--ok">Oui</span>':'<span class="pill pill--muted">Non</span>'}</td>
+      <td style="text-align:right;white-space:nowrap"><button class="btn btn--glass btn--sm" onclick="openProduct(${p.id})">Modifier</button>
+      ${p.active?`<button class="btn btn--glass btn--sm" style="color:var(--danger)" onclick="delProduct(${p.id})">Retirer</button>`:''}</td></tr>`).join('');
+  }
+  window.openProduct = function(id){
+    const p = id?PRODUCTS.find(x=>x.id===id):{ref:'',name:'',category:'',format:'',purity:'',description:'',price:'',stock:0,low_stock:5,active:1};
+    document.getElementById('prodInner').innerHTML = `
+      <h2 style="font-size:1.4rem;margin-bottom:1.2rem">${id?'Modifier le produit':'Nouveau produit'}</h2>
+      <div class="grid2" style="grid-template-columns:1fr 1fr">
+        <label class="field"><span>Référence *</span><input id="p_ref" value="${p.ref}"></label>
+        <label class="field"><span>Nom *</span><input id="p_name" value="${p.name}"></label>
+        <label class="field"><span>Catégorie</span><input id="p_cat" value="${p.category||''}"></label>
+        <label class="field"><span>Format</span><input id="p_format" value="${p.format||''}"></label>
+        <label class="field"><span>Pureté</span><input id="p_purity" value="${p.purity||''}"></label>
+        <label class="field"><span>Prix € HT</span><input id="p_price" type="number" step="0.01" value="${p.price||''}"></label>
+        <label class="field"><span>Stock</span><input id="p_stock" type="number" value="${p.stock}"></label>
+        <label class="field"><span>Seuil d'alerte</span><input id="p_low" type="number" value="${p.low_stock}"></label>
+      </div>
+      <label class="field"><span>Description</span><textarea id="p_desc" rows="2">${p.description||''}</textarea></label>
+      <div style="display:flex;gap:.8rem;margin-top:.4rem"><button class="btn btn--primary btn--full" onclick="saveProduct(${id||0})">Enregistrer</button><button class="btn btn--glass" onclick="closeProd()">Annuler</button></div>`;
+    document.getElementById('prodModal').classList.add('show');
+  };
+  window.closeProd = ()=>document.getElementById('prodModal').classList.remove('show');
+  window.saveProduct = async function(id){
+    const body = { ref:val('p_ref'),name:val('p_name'),category:val('p_cat'),format:val('p_format'),purity:val('p_purity'),
+      description:val('p_desc'),price:parseFloat(val('p_price'))||0,stock:parseInt(val('p_stock'))||0,low_stock:parseInt(val('p_low'))||5,active:1 };
+    const r = id ? await api.put('/api/admin/products/'+id, body) : await api.post('/api/admin/products', body);
+    if(r.error){ toast(r.error,true); return; }
+    closeProd(); toast('Produit enregistré ✓'); await Promise.all([loadProducts(),loadDashboard()]);
+  };
+  window.delProduct = async function(id){ if(!confirm('Retirer ce produit du catalogue ?'))return; await api.del('/api/admin/products/'+id); toast('Produit retiré'); await Promise.all([loadProducts(),loadDashboard()]); };
+  const val = id => document.getElementById(id).value;
+  document.getElementById('prodModal').onclick = e=>{ if(e.target.id==='prodModal') closeProd(); };
+
+  // CUSTOMERS
+  async function loadCustomers(){
+    const CS = { pending:['En attente','warn'], approved:['Validé','ok'], rejected:['Refusé','danger'] };
+    const { customers } = await api.get('/api/admin/customers');
+    document.getElementById('custT').querySelector('tbody').innerHTML = customers.length ? customers.map(c=>{
+      const [l,cl]=CS[c.status]||[c.status,'muted'];
+      const actions = c.status==='approved'
+        ? `<button class="btn btn--glass btn--sm" style="color:var(--danger)" onclick="setCust(${c.id},'rejected')">Suspendre</button>`
+        : `<button class="btn btn--primary btn--sm" onclick="setCust(${c.id},'approved')">Valider</button> <button class="btn btn--glass btn--sm" onclick="setCust(${c.id},'rejected')">Refuser</button>`;
+      return `<tr><td><b>${c.lab_name||''}</b></td><td>${c.contact_name||''}<div class="muted" style="font-size:.75rem">${c.email}</div></td>
+        <td class="muted">${c.accreditation||'—'}</td><td class="muted">${c.country||'—'}</td><td>${c.orders_count}</td>
+        <td><span class="pill pill--${cl}">${l}</span></td><td style="white-space:nowrap">${actions}</td></tr>`;
+    }).join('') : '<tr><td colspan="7" class="muted" style="padding:1.4rem">Aucun compte labo.</td></tr>';
+  }
+  window.setCust = async (id,status)=>{ const r=await api.patch('/api/admin/customers/'+id,{status}); if(r.error){toast(r.error,true);return;} toast('Compte mis à jour ✓'); await Promise.all([loadCustomers(),loadDashboard()]); };
+
+  // SETTINGS
+  async function loadSettings(){
+    const { settings } = await api.get('/api/admin/settings');
+    for(const k of ['bank_holder','bank_iban','bank_bic','crypto_btc','crypto_usdt','company_email']){
+      const el=document.getElementById('s_'+k); if(el) el.value = settings[k]||'';
+    }
+  }
+  window.saveSettings = async function(){
+    const body={}; for(const k of ['bank_holder','bank_iban','bank_bic','crypto_btc','crypto_usdt','company_email']) body[k]=document.getElementById('s_'+k).value;
+    const r = await api.put('/api/admin/settings', body); if(r.error){toast(r.error,true);return;} toast('Réglages enregistrés ✓');
+  };
+
+  init();
+</script>
+</body>
+</html>

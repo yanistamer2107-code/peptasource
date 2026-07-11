@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mon compte — PeptaSource Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+<style>
+  .auth-wrap{max-width:920px;margin:2.5rem auto;padding:0 1rem}
+  .tabs{display:flex;gap:.5rem;background:rgba(255,255,255,.04);padding:.35rem;border-radius:14px;border:1px solid var(--panel-brd);width:fit-content;margin-bottom:1.6rem}
+  .tabs button{padding:.6rem 1.4rem;border-radius:10px;border:0;background:transparent;color:var(--muted);font-weight:600;cursor:pointer;font-family:inherit;font-size:.9rem}
+  .tabs button.active{background:linear-gradient(120deg,rgba(53,224,208,.9),rgba(74,168,255,.9));color:#04202a}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr}}
+  .order-row{border:1px solid var(--panel-brd);border-radius:14px;padding:1.1rem 1.3rem;margin-bottom:.9rem;background:var(--panel)}
+  .order-row .oh{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+  code{background:rgba(255,255,255,.06);padding:.1rem .4rem;border-radius:5px;font-size:.85em}
+</style>
+</head>
+<body>
+  <div class="topbar">⚗️ <strong>Research Use Only</strong> — Réservé aux laboratoires &amp; institutions agréés.</div>
+  <header class="site"><div class="wrap nav">
+    <a class="brand" href="/"><span class="brand__mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 22v-6M4.9 6.5l4.6 2.7M14.5 14.8l4.6 2.7M19.1 6.5l-4.6 2.7M4.9 17.5l4.6-2.7" stroke="#04202a" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="12" r="2.6" fill="#04202a"/></svg></span><span class="brand__name">Pepta<span>Source</span></span></a>
+    <nav class="nav__links"><a href="/#catalogue">Catalogue</a><a href="/">Accueil</a></nav>
+    <div class="nav__right"><a class="btn btn--glass btn--sm" href="/#catalogue">← Boutique</a></div>
+  </div></header>
+
+  <main class="auth-wrap">
+    <!-- LOGGED OUT -->
+    <section id="authView" style="display:none">
+      <span class="eyebrow">Espace laboratoire</span>
+      <h1 style="font-size:2rem;margin:.8rem 0 1.6rem">Accédez à votre compte</h1>
+      <div class="tabs"><button id="tabLogin" class="active" onclick="showTab('login')">Connexion</button><button id="tabReg" onclick="showTab('reg')">Créer un compte labo</button></div>
+
+      <div id="loginForm" class="card" style="max-width:440px">
+        <label class="field"><span>Email professionnel</span><input id="l_email" type="email" placeholder="vous@laboratoire.fr"></label>
+        <label class="field"><span>Mot de passe</span><input id="l_pass" type="password" placeholder="••••••••"></label>
+        <button class="btn btn--primary btn--full" onclick="doLogin()" id="loginBtn">Se connecter</button>
+      </div>
+
+      <div id="regForm" class="card" style="display:none">
+        <div class="grid2">
+          <label class="field"><span>Nom du laboratoire *</span><input id="r_lab" placeholder="Institut / société"></label>
+          <label class="field"><span>N° d'habilitation *</span><input id="r_acc" placeholder="Agrément / accréditation"></label>
+          <label class="field"><span>Nom du contact</span><input id="r_name" placeholder="Dr. ..."></label>
+          <label class="field"><span>Pays</span><input id="r_country" placeholder="France"></label>
+          <label class="field"><span>Téléphone</span><input id="r_phone" placeholder="+33 ..."></label>
+          <label class="field"><span>Email professionnel *</span><input id="r_email" type="email" placeholder="vous@laboratoire.fr"></label>
+          <label class="field"><span>Mot de passe * (6 car. min)</span><input id="r_pass" type="password" placeholder="••••••••"></label>
+        </div>
+        <p class="muted" style="font-size:.82rem;margin:.4rem 0 1rem">En créant un compte, vous déclarez commander à des fins de recherche uniquement, pour le compte d'un établissement habilité. Votre habilitation sera vérifiée avant activation.</p>
+        <button class="btn btn--primary btn--full" onclick="doRegister()" id="regBtn">Créer mon compte laboratoire</button>
+      </div>
+    </section>
+
+    <!-- LOGGED IN -->
+    <section id="dashView" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;margin-bottom:1.6rem">
+        <div>
+          <span class="eyebrow">Espace laboratoire</span>
+          <h1 style="font-size:1.9rem;margin:.6rem 0 .4rem" id="welcome"></h1>
+          <div id="statusPill"></div>
+        </div>
+        <button class="btn btn--glass btn--sm" onclick="doLogout()">Déconnexion</button>
+      </div>
+      <div id="pendingBanner"></div>
+      <h2 style="font-size:1.2rem;margin:1.6rem 0 1rem">Mes commandes</h2>
+      <div id="orders"><div style="text-align:center;padding:2rem"><span class="spinner"></span></div></div>
+    </section>
+  </main>
+
+  <div id="toast"><div class="t"></div></div>
+<script src="/app.js"></script>
+<script>
+  const STATUS_LABEL = { awaiting_payment:['En attente de paiement','warn'], paid:['Payée','info'], shipped:['Expédiée','ok'], cancelled:['Annulée','danger'] };
+  let ME=null;
+  function qparam(k){ return new URLSearchParams(location.search).get(k); }
+
+  async function init(){
+    ME = await api.me();
+    if(ME && ME.role==='admin'){ location.href='/admin'; return; }
+    if(ME){ showDash(); } else { document.getElementById('authView').style.display='block'; if(qparam('next')==='order') showTab('login'); }
+  }
+  function showTab(t){
+    document.getElementById('tabLogin').classList.toggle('active',t==='login');
+    document.getElementById('tabReg').classList.toggle('active',t==='reg');
+    document.getElementById('loginForm').style.display = t==='login'?'block':'none';
+    document.getElementById('regForm').style.display = t==='reg'?'block':'none';
+  }
+
+  async function doLogin(){
+    const b=document.getElementById('loginBtn'); b.disabled=true; b.innerHTML='<span class="spinner"></span>';
+    const res = await api.post('/api/auth/login',{ email:document.getElementById('l_email').value, password:document.getElementById('l_pass').value });
+    b.disabled=false; b.textContent='Se connecter';
+    if(res.error){ toast(res.error,true); return; }
+    if(res.user.role==='admin'){ location.href='/admin'; return; }
+    location.reload();
+  }
+  async function doRegister(){
+    const b=document.getElementById('regBtn'); b.disabled=true; b.innerHTML='<span class="spinner"></span>';
+    const res = await api.post('/api/auth/register',{
+      lab_name:document.getElementById('r_lab').value, accreditation:document.getElementById('r_acc').value,
+      contact_name:document.getElementById('r_name').value, country:document.getElementById('r_country').value,
+      phone:document.getElementById('r_phone').value, email:document.getElementById('r_email').value, password:document.getElementById('r_pass').value });
+    b.disabled=false; b.textContent='Créer mon compte laboratoire';
+    if(res.error){ toast(res.error,true); return; }
+    toast('Compte créé ✓'); setTimeout(()=>location.reload(),700);
+  }
+  async function doLogout(){ await api.post('/api/auth/logout'); location.href='/'; }
+  window.showTab=showTab; window.doLogin=doLogin; window.doRegister=doRegister; window.doLogout=doLogout;
+
+  async function showDash(){
+    document.getElementById('dashView').style.display='block';
+    document.getElementById('welcome').textContent = ME.lab_name || ME.contact_name || 'Mon compte';
+    const st = ME.status;
+    const map = { approved:['Compte validé','ok'], pending:['En attente de validation','warn'], rejected:['Habilitation refusée','danger'] };
+    const [lbl,cls] = map[st]||['—','muted'];
+    document.getElementById('statusPill').innerHTML = `<span class="pill pill--${cls}">${lbl}</span>`;
+    if(st!=='approved'){
+      document.getElementById('pendingBanner').innerHTML = `<div class="card" style="border-color:rgba(255,192,74,.3);background:rgba(255,192,74,.06)">
+        <b>Votre compte est en cours de vérification.</b><p class="muted" style="font-size:.9rem;margin-top:.4rem">Vous pourrez passer commande dès que votre habilitation aura été validée par notre équipe. Vous pouvez déjà parcourir le <a href="/#catalogue" style="color:var(--cyan-soft)">catalogue</a>.</p></div>`;
+    }
+    const { orders } = await api.get('/api/orders/mine');
+    const box = document.getElementById('orders');
+    if(!orders || !orders.length){ box.innerHTML='<p class="muted">Aucune commande pour le moment.</p>'; return; }
+    box.innerHTML = orders.map(o=>{
+      const [lbl,cls]=STATUS_LABEL[o.status]||[o.status,'muted'];
+      const items = o.items.map(i=>`${i.qty}× ${i.ref}`).join(', ');
+      return `<div class="order-row"><div class="oh"><div><b style="font-family:'Sora'">${o.reference}</b> <span class="muted" style="font-size:.82rem">· ${o.created_at}</span></div><span class="pill pill--${cls}">${lbl}</span></div>
+        <div class="muted" style="font-size:.88rem;margin-top:.5rem">${items}</div>
+        <div style="display:flex;justify-content:space-between;margin-top:.6rem"><span class="muted" style="font-size:.85rem">Paiement : ${o.payment_method}</span><b>${o.total} €</b></div></div>`;
+    }).join('');
+  }
+  init();
+</script>
+</body>
+</html>

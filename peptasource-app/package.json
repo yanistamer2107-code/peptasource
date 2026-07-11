@@ -1,0 +1,20 @@
+{
+  "name": "peptasource-app",
+  "version": "1.0.0",
+  "description": "PeptaSource Labs — boutique B2B de peptides de recherche (RUO) avec stock, panier, commandes, paiement virement/crypto et espace admin.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env --experimental-sqlite server.js",
+    "seed": "node --env-file-if-exists=.env --experimental-sqlite seed.js",
+    "demo": "node --env-file-if-exists=.env --experimental-sqlite demo.js",
+    "setup": "npm run seed && npm run demo"
+  },
+  "engines": { "node": ">=22.5" },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

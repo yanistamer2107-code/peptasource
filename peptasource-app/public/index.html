@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PeptaSource Labs — Peptides de recherche haute pureté</title>
+<meta name="description" content="Boutique B2B de peptides de synthèse haute pureté pour laboratoires agréés. Usage recherche uniquement." />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+<style>
+  /* Hero */
+  .hero{position:relative;min-height:88svh;display:flex;align-items:center;overflow:hidden}
+  .hero__video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+  .hero__scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(5,13,22,.94) 0%,rgba(5,13,22,.78) 34%,rgba(5,13,22,.28) 62%,rgba(5,13,22,.55) 100%),linear-gradient(180deg,rgba(5,13,22,.4) 0%,transparent 30%,transparent 60%,rgba(5,13,22,.95) 100%)}
+  .hero__inner{position:relative;z-index:2;padding:3rem 0;max-width:44rem}
+  .hero h1{font-size:clamp(2.4rem,5.6vw,4.4rem);font-weight:700;margin:1.3rem 0}
+  .hero p.lead{font-size:clamp(1.02rem,1.5vw,1.2rem);color:var(--muted);max-width:33rem}
+  .hero__actions{display:flex;flex-wrap:wrap;gap:1rem;margin-top:2.1rem}
+  .hero__trust{margin-top:2.6rem;display:flex;gap:1.6rem;flex-wrap:wrap;font-size:.82rem;color:var(--muted-dim)}
+  .hero__trust span{display:flex;align-items:center;gap:.5rem}.hero__trust .tick{color:var(--cyan)}
+  /* Marquee */
+  .marquee{border-block:1px solid rgba(120,190,220,.1);background:var(--bg-soft);overflow:hidden;padding:1rem 0}
+  .marquee__track{display:flex;gap:3.5rem;width:max-content;animation:scroll 26s linear infinite}
+  .marquee__track span{display:flex;align-items:center;gap:.6rem;font-family:'Sora';font-weight:600;color:var(--muted);white-space:nowrap}
+  .marquee__track b{color:var(--cyan-soft)}
+  @keyframes scroll{to{transform:translateX(-50%)}}
+  /* Section */
+  section.block{padding:5rem 0}
+  .section-head{max-width:44rem;margin-bottom:2.6rem}
+  .section-head h2{font-size:clamp(1.9rem,3.4vw,2.7rem);margin:.9rem 0 .7rem}
+  .filters{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:2rem}
+  .chip{padding:.5rem 1rem;border-radius:999px;border:1px solid var(--panel-brd);background:rgba(255,255,255,.03);color:var(--muted);font-size:.86rem;font-weight:600;cursor:pointer;transition:.2s}
+  .chip:hover{color:#fff}
+  .chip.active{background:linear-gradient(120deg,rgba(53,224,208,.9),rgba(74,168,255,.9));color:#04202a;border-color:transparent}
+  /* Product grid */
+  .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem}
+  .pcard{position:relative;border-radius:20px;padding:1.6rem;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid var(--panel-brd);transition:.3s;display:flex;flex-direction:column}
+  .pcard:hover{transform:translateY(-5px);border-color:rgba(53,224,208,.4)}
+  .pcard h3{font-size:1.22rem;margin:.9rem 0 .2rem}
+  .pcard .cas{font-size:.78rem;color:var(--muted-dim);font-family:ui-monospace,monospace;margin-bottom:.7rem}
+  .pcard p.desc{font-size:.86rem;color:var(--muted);margin-bottom:1rem;flex:1}
+  .pcard .row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+  .price{font-family:'Sora';font-weight:700;font-size:1.5rem}
+  .price small{font-size:.8rem;color:var(--muted-dim);font-weight:500}
+  .pcard__foot{display:flex;align-items:center;gap:.7rem}
+  @media(max-width:940px){.pgrid{grid-template-columns:1fr 1fr}}
+  @media(max-width:680px){.pgrid{grid-template-columns:1fr}.nav__links{display:none}}
+</style>
+</head>
+<body>
+  <div class="topbar">⚗️ <strong>Research Use Only</strong> — Réservé aux laboratoires &amp; institutions agréés. Non destiné à un usage humain ou vétérinaire.</div>
+
+  <header class="site">
+    <div class="wrap nav">
+      <a class="brand" href="/"><span class="brand__mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 22v-6M4.9 6.5l4.6 2.7M14.5 14.8l4.6 2.7M19.1 6.5l-4.6 2.7M4.9 17.5l4.6-2.7" stroke="#04202a" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="12" r="2.6" fill="#04202a"/></svg></span><span class="brand__name">Pepta<span>Source</span></span></a>
+      <nav class="nav__links">
+        <a href="#catalogue">Catalogue</a><a href="#qualite">Qualité</a><a href="/compte">Mon compte</a>
+      </nav>
+      <div class="nav__right">
+        <a id="accountBtn" class="btn btn--glass btn--sm" href="/compte">Compte labo</a>
+        <button class="iconbtn" id="cartBtn" aria-label="Panier">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6h15l-1.5 9h-12z" stroke-linejoin="round"/><path d="M6 6L5 3H2" stroke-linecap="round"/><circle cx="9" cy="20" r="1.4" fill="currentColor"/><circle cx="18" cy="20" r="1.4" fill="currentColor"/></svg>
+          <span class="badge-count" id="cartCount" style="display:none">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <video class="hero__video" autoplay muted loop playsinline poster="/poster.jpg"><source src="/vial.mp4" type="video/mp4"></video>
+      <div class="hero__scrim"></div>
+      <div class="wrap hero__inner">
+        <span class="eyebrow">Peptides de synthèse · qualité analytique</span>
+        <h1>La science des peptides,<br><span class="grad">livrée avec précision.</span></h1>
+        <p class="lead">Peptides haute pureté pour laboratoires agréés, analysés lot par lot par HPLC et spectrométrie de masse — certificat d'analyse à l'appui.</p>
+        <div class="hero__actions">
+          <a href="#catalogue" class="btn btn--primary">Explorer le catalogue →</a>
+          <a href="/compte" class="btn btn--glass">Ouvrir un compte laboratoire</a>
+        </div>
+        <div class="hero__trust">
+          <span><span class="tick">✓</span> Pureté HPLC ≥ 99%</span>
+          <span><span class="tick">✓</span> Certificat d'analyse par lot</span>
+          <span><span class="tick">✓</span> Chaîne du froid contrôlée</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="marquee"><div class="marquee__track" id="mq"></div></div>
+
+    <!-- CATALOGUE -->
+    <section class="block" id="catalogue">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Catalogue</span>
+          <h2>Références de recherche</h2>
+          <p class="muted">Peptides de synthèse livrés avec certificat d'analyse. La commande est réservée aux comptes laboratoires validés.</p>
+        </div>
+        <div class="filters" id="filters"></div>
+        <div class="pgrid" id="pgrid"><div style="grid-column:1/-1;text-align:center;padding:3rem"><span class="spinner"></span></div></div>
+      </div>
+    </section>
+
+    <!-- QUALITE -->
+    <section class="block" id="qualite" style="background:var(--bg-soft)">
+      <div class="wrap">
+        <div class="section-head"><span class="eyebrow">Méthode</span><h2>Un standard analytique à chaque étape</h2></div>
+        <div class="pgrid" style="grid-template-columns:repeat(4,1fr)">
+          <div class="card"><div style="font-size:1.6rem">🧬</div><h3 style="font-size:1.05rem;margin:.6rem 0 .3rem">Synthèse contrôlée</h3><p class="muted" style="font-size:.88rem">Procédés reproductibles, séquence vérifiée.</p></div>
+          <div class="card"><div style="font-size:1.6rem">📊</div><h3 style="font-size:1.05rem;margin:.6rem 0 .3rem">Analyse par lot</h3><p class="muted" style="font-size:.88rem">HPLC + spectrométrie de masse, CoA joint.</p></div>
+          <div class="card"><div style="font-size:1.6rem">❄️</div><h3 style="font-size:1.05rem;margin:.6rem 0 .3rem">Chaîne du froid</h3><p class="muted" style="font-size:.88rem">Emballage isotherme et suivi d'expédition.</p></div>
+          <div class="card"><div style="font-size:1.6rem">🗂️</div><h3 style="font-size:1.05rem;margin:.6rem 0 .3rem">Traçabilité totale</h3><p class="muted" style="font-size:.88rem">Numéros de lot, documentation et FDS.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site">
+    <div class="wrap">
+      <div style="display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap">
+        <div style="max-width:24rem">
+          <div class="brand"><span class="brand__mark" style="width:32px;height:32px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 22v-6M4.9 6.5l4.6 2.7M14.5 14.8l4.6 2.7M19.1 6.5l-4.6 2.7M4.9 17.5l4.6-2.7" stroke="#04202a" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="12" r="2.6" fill="#04202a"/></svg></span><span class="brand__name">Pepta<span>Source</span></span></div>
+          <p class="muted" style="margin-top:.9rem;font-size:.88rem">Fournisseur B2B de peptides de recherche haute pureté, réservés aux laboratoires et institutions agréés.</p>
+        </div>
+        <div style="display:flex;gap:3rem;flex-wrap:wrap">
+          <div><h4 style="font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.8rem">Boutique</h4><a class="muted" href="#catalogue" style="display:block;padding:.25rem 0">Catalogue</a><a class="muted" href="/compte" style="display:block;padding:.25rem 0">Mon compte</a></div>
+          <div><h4 style="font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.8rem">Société</h4><a class="muted" href="#qualite" style="display:block;padding:.25rem 0">Qualité</a><a class="muted" href="/compte" style="display:block;padding:.25rem 0">Contact</a></div>
+        </div>
+      </div>
+      <div class="disclaimer"><strong>Avertissement — Usage recherche uniquement (Research Use Only).</strong> Tous les produits sont destinés exclusivement à la recherche scientifique in vitro et aux applications de laboratoire. Ils ne sont <strong>pas des médicaments</strong>, ne sont pas destinés à un usage diagnostique ou thérapeutique, et ne doivent en aucun cas être administrés à l'homme ou à l'animal, ni consommés. Vente réservée aux professionnels habilités, sous réserve de vérification. L'acheteur est seul responsable du respect des réglementations applicables.</div>
+      <div class="foot__bottom"><span>© 2026 PeptaSource Labs — Démonstration.</span><span><a href="/admin" class="muted">Espace admin</a> · Mentions légales · CGV</span></div>
+    </div>
+  </footer>
+
+  <!-- Cart drawer -->
+  <div class="overlay" id="overlay"></div>
+  <aside class="drawer" id="drawer">
+    <div class="drawer__head"><h3 style="font-size:1.15rem">Votre panier</h3><button class="iconbtn" id="closeCart">✕</button></div>
+    <div class="drawer__body" id="cartBody"></div>
+    <div class="drawer__foot">
+      <div style="display:flex;justify-content:space-between;margin-bottom:1rem;font-size:1.05rem"><span class="muted">Total</span><b id="cartTotal" style="font-family:'Sora'">0,00 €</b></div>
+      <button class="btn btn--primary btn--full" id="checkoutBtn">Passer commande →</button>
+      <p class="muted" style="font-size:.76rem;text-align:center;margin-top:.7rem">Commande réservée aux comptes laboratoires validés.</p>
+    </div>
+  </aside>
+
+  <!-- Checkout modal -->
+  <div class="modal-wrap" id="checkoutModal">
+    <div class="modal" id="checkoutInner"></div>
+  </div>
+
+  <div id="toast"><div class="t"></div></div>
+
+<script src="/app.js"></script>
+<script>
+  // ---------- État ----------
+  let PRODUCTS = [], CART = loadCart(), ME = null, CURRENT_CAT = 'Tous';
+
+  function loadCart(){ try{ return JSON.parse(localStorage.getItem('ps_cart')||'[]'); }catch{ return []; } }
+  function saveCart(){ localStorage.setItem('ps_cart', JSON.stringify(CART)); renderCart(); }
+
+  async function init(){
+    ME = await api.me();
+    renderAccountBtn();
+    const marquee = ['🔬 Grade recherche','📄 CoA fourni','❄️ Stockage −20°C','🧬 Séquence vérifiée','🔒 Traçabilité des lots','⚗️ HPLC & MS'];
+    document.getElementById('mq').innerHTML = [...marquee,...marquee].map(m=>{const[i,...t]=m.split(' ');return `<span>${i} <b>${t.join(' ')}</b></span>`}).join('');
+    await loadProducts();
+    renderCart();
+  }
+
+  async function loadProducts(){
+    const { products } = await api.get('/api/products');
+    PRODUCTS = products;
+    const cats = ['Tous', ...new Set(products.map(p=>p.category).filter(Boolean))];
+    document.getElementById('filters').innerHTML = cats.map(c=>`<button class="chip ${c===CURRENT_CAT?'active':''}" data-cat="${c}">${c}</button>`).join('');
+    document.querySelectorAll('.chip').forEach(ch=>ch.onclick=()=>{CURRENT_CAT=ch.dataset.cat;document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x.dataset.cat===CURRENT_CAT));renderProducts();});
+    renderProducts();
+  }
+
+  function renderProducts(){
+    const list = CURRENT_CAT==='Tous'?PRODUCTS:PRODUCTS.filter(p=>p.category===CURRENT_CAT);
+    document.getElementById('pgrid').innerHTML = list.map(p=>{
+      const out = p.stock<=0;
+      const low = p.stock>0 && p.stock<=5;
+      const stockPill = out?'<span class="pill pill--danger">Rupture</span>':low?`<span class="pill pill--warn">Plus que ${p.stock}</span>`:'<span class="pill pill--ok">En stock</span>';
+      return `<article class="pcard">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <span class="tag">${p.category||'Recherche'}</span>${stockPill}
+        </div>
+        <h3>${p.name}</h3>
+        <div class="cas">${p.ref} · ${p.format||''} · Pureté ${p.purity||'—'}</div>
+        <p class="desc">${p.description||''}</p>
+        <div class="row"><span class="price">${p.price} € <small>HT / fiole</small></span></div>
+        <div class="pcard__foot">
+          <button class="btn ${out?'btn--glass':'btn--primary'} btn--full" ${out?'disabled':''} onclick="addToCart(${p.id})">${out?'Indisponible':'Ajouter au panier'}</button>
+        </div>
+      </article>`;
+    }).join('') || '<p class="muted">Aucun produit dans cette catégorie.</p>';
+  }
+
+  window.addToCart = function(id){
+    const p = PRODUCTS.find(x=>x.id===id); if(!p) return;
+    const line = CART.find(l=>l.id===id);
+    const cur = line?line.qty:0;
+    if(cur+1>p.stock){ toast('Stock maximum atteint pour ce produit.', true); return; }
+    if(line) line.qty++; else CART.push({id:p.id, ref:p.ref, name:p.name, price_cents:p.price_cents, qty:1});
+    saveCart(); openCart(); toast('Ajouté au panier ✓');
+  };
+  function setQty(id,delta){
+    const line = CART.find(l=>l.id===id); if(!line) return;
+    const p = PRODUCTS.find(x=>x.id===id);
+    line.qty += delta;
+    if(line.qty<=0){ CART = CART.filter(l=>l.id!==id); }
+    else if(p && line.qty>p.stock){ line.qty=p.stock; toast('Stock maximum atteint.', true); }
+    saveCart();
+  }
+  window.setQty = setQty;
+
+  function cartTotalCents(){ return CART.reduce((s,l)=>s+l.price_cents*l.qty,0); }
+  function renderCart(){
+    const n = CART.reduce((s,l)=>s+l.qty,0);
+    const badge = document.getElementById('cartCount');
+    badge.style.display = n?'grid':'none'; badge.textContent = n;
+    const body = document.getElementById('cartBody');
+    if(!CART.length){ body.innerHTML = '<p class="muted" style="text-align:center;padding:2rem 0">Votre panier est vide.</p>'; }
+    else body.innerHTML = CART.map(l=>`<div class="cart-item"><div class="ci-info"><h4>${l.name}</h4><div class="muted" style="font-size:.78rem">${l.ref}</div>
+      <div class="qtybox"><button onclick="setQty(${l.id},-1)">−</button><span>${l.qty}</span><button onclick="setQty(${l.id},1)">+</button></div></div>
+      <div style="text-align:right"><b style="font-family:'Sora'">${((l.price_cents*l.qty)/100).toFixed(2)} €</b></div></div>`).join('');
+    document.getElementById('cartTotal').textContent = (cartTotalCents()/100).toFixed(2).replace('.',',')+' €';
+  }
+
+  function openCart(){ document.getElementById('drawer').classList.add('show'); document.getElementById('overlay').classList.add('show'); }
+  function closeCart(){ document.getElementById('drawer').classList.remove('show'); document.getElementById('overlay').classList.remove('show'); }
+  document.getElementById('cartBtn').onclick = openCart;
+  document.getElementById('closeCart').onclick = closeCart;
+  document.getElementById('overlay').onclick = ()=>{ closeCart(); closeModal(); };
+
+  function renderAccountBtn(){
+    const b = document.getElementById('accountBtn');
+    if(ME){ b.textContent = ME.role==='admin'?'Admin':(ME.lab_name||'Mon compte'); b.href = ME.role==='admin'?'/admin':'/compte'; }
+    else { b.textContent='Compte labo'; b.href='/compte'; }
+  }
+
+  // ---------- Checkout ----------
+  document.getElementById('checkoutBtn').onclick = openCheckout;
+  function openModal(){ document.getElementById('checkoutModal').classList.add('show'); }
+  function closeModal(){ document.getElementById('checkoutModal').classList.remove('show'); }
+  window.closeModal = closeModal;
+
+  function openCheckout(){
+    if(!CART.length){ toast('Votre panier est vide.', true); return; }
+    if(!ME){ renderModalLoginPrompt(); openModal(); return; }
+    if(ME.role==='lab' && ME.status!=='approved'){ renderModalPending(); openModal(); return; }
+    renderCheckoutForm(); openModal();
+  }
+
+  function renderModalLoginPrompt(){
+    document.getElementById('checkoutInner').innerHTML = `
+      <h2 style="font-size:1.5rem;margin-bottom:.6rem">Connexion requise</h2>
+      <p class="muted" style="margin-bottom:1.4rem">La commande est réservée aux comptes laboratoires validés. Connectez-vous ou créez un compte pour continuer.</p>
+      <div style="display:flex;gap:.8rem"><a class="btn btn--primary btn--full" href="/compte?next=order">Se connecter / S'inscrire</a><button class="btn btn--glass" onclick="closeModal()">Fermer</button></div>`;
+  }
+  function renderModalPending(){
+    document.getElementById('checkoutInner').innerHTML = `
+      <h2 style="font-size:1.5rem;margin-bottom:.6rem">Compte en cours de validation</h2>
+      <p class="muted" style="margin-bottom:1.4rem">Votre habilitation est en cours de vérification par notre équipe. Vous pourrez commander dès que votre compte sera validé.</p>
+      <button class="btn btn--glass btn--full" onclick="closeModal()">Compris</button>`;
+  }
+  function renderCheckoutForm(){
+    const total = (cartTotalCents()/100).toFixed(2);
+    document.getElementById('checkoutInner').innerHTML = `
+      <h2 style="font-size:1.5rem;margin-bottom:.3rem">Finaliser la commande</h2>
+      <p class="muted" style="margin-bottom:1.3rem">${CART.reduce((s,l)=>s+l.qty,0)} article(s) · Total <b style="color:var(--ink)">${total} € HT</b></p>
+      <label class="field"><span>Mode de règlement</span>
+        <select id="pm"><option value="virement">Virement bancaire</option><option value="crypto">Cryptomonnaie (BTC / USDT)</option></select></label>
+      <label class="field"><span>Note à l'attention de l'équipe (optionnel)</span><textarea id="note" rows="2" placeholder="Référence interne, précisions de livraison…"></textarea></label>
+      <div style="background:rgba(74,168,255,.08);border:1px solid rgba(74,168,255,.2);border-radius:12px;padding:.9rem 1rem;font-size:.83rem;color:var(--muted);margin-bottom:1.3rem">
+        Après validation, vous recevrez une <b style="color:var(--ink)">référence de commande</b> et les instructions de paiement. La commande est confirmée dès réception du règlement.</div>
+      <div style="display:flex;gap:.8rem"><button class="btn btn--primary btn--full" id="placeBtn" onclick="placeOrder()">Valider la commande →</button><button class="btn btn--glass" onclick="closeModal()">Annuler</button></div>`;
+  }
+
+  window.placeOrder = async function(){
+    const btn = document.getElementById('placeBtn'); btn.disabled=true; btn.innerHTML='<span class="spinner"></span>';
+    const payment_method = document.getElementById('pm').value;
+    const note = document.getElementById('note').value;
+    const res = await api.post('/api/orders', { items: CART.map(l=>({id:l.id,qty:l.qty})), payment_method, note });
+    if(res.error){ toast(res.error, true); btn.disabled=false; btn.textContent='Valider la commande →'; return; }
+    CART=[]; saveCart(); closeCart();
+    const pay = res.payment;
+    const details = pay.type==='crypto'
+      ? `<div class="muted" style="font-size:.9rem;line-height:2"><div><b style="color:var(--ink)">Bitcoin (BTC)</b><br><code style="word-break:break-all">${pay.btc}</code></div><div style="margin-top:.6rem"><b style="color:var(--ink)">USDT (TRC-20)</b><br><code style="word-break:break-all">${pay.usdt_trc20}</code></div></div>`
+      : `<div class="muted" style="font-size:.92rem;line-height:2"><div><b style="color:var(--ink)">Bénéficiaire</b> · ${pay.holder}</div><div><b style="color:var(--ink)">IBAN</b> · <code>${pay.iban}</code></div><div><b style="color:var(--ink)">BIC</b> · ${pay.bic}</div></div>`;
+    document.getElementById('checkoutInner').innerHTML = `
+      <div style="text-align:center;margin-bottom:1rem"><div style="font-size:2.4rem">✅</div><h2 style="font-size:1.5rem;margin-top:.4rem">Commande enregistrée</h2></div>
+      <p class="muted" style="text-align:center;margin-bottom:1.3rem">Référence <b style="color:var(--cyan-soft);font-family:'Sora'">${res.reference}</b> · Montant <b style="color:var(--ink)">${res.total} €</b></p>
+      <div class="card"><p style="font-size:.82rem;color:var(--muted);margin-bottom:.7rem">Réglez le montant en indiquant la référence en communication :</p>${details}</div>
+      <p class="muted" style="font-size:.82rem;margin:1rem 0 1.3rem">Notre équipe validera la commande dès réception du paiement. Un récapitulatif est disponible dans « Mon compte ».</p>
+      <div style="display:flex;gap:.8rem"><a class="btn btn--primary btn--full" href="/compte">Voir mes commandes</a><button class="btn btn--glass" onclick="closeModal()">Fermer</button></div>`;
+  };
+
+  init();
+</script>
+</body>
+</html>
