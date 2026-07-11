@@ -1,10 +1,9 @@
-# Blueprint Render — déploiement automatique.
-# Sur Render : New + → Blueprint → sélectionnez ce dépôt.
 services:
   - type: web
     name: peptasource
     runtime: node
     plan: free
+    rootDir: peptasource-app
     buildCommand: npm install
     startCommand: npm start
     autoDeploy: true
@@ -12,14 +11,8 @@ services:
       - key: NODE_ENV
         value: production
       - key: JWT_SECRET
-        generateValue: true          # secret généré automatiquement
+        generateValue: true
       - key: ADMIN_EMAIL
         value: admin@peptasource.example
       - key: ADMIN_PASSWORD
-        sync: false                  # Render vous demandera de le saisir (choisissez un mot de passe fort)
-    # Pour conserver la base entre les déploiements, passez à un plan payant
-    # et décommentez le disque ci-dessous (les disques ne sont pas dispo en offre gratuite) :
-    # disk:
-    #   name: data
-    #   mountPath: /opt/render/project/src/data
-    #   sizeGB: 1
+        sync: false
